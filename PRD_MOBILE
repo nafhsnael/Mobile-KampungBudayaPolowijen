@@ -1,0 +1,152 @@
+Product Requirement Document (PRD)
+Aplikasi Mobile "Polowijen Cultural & Tourism App" (User Side) - Updated V2
+
+Metadata
+Detail
+ 
+Nama Produk
+Polowijen Mobile Application (User View)
+Framework
+Flutter (Dart)
+Target User
+Wisatawan, Pecinta Budaya, Pengunjung Kampung Wisata Topeng Polowijen
+Versi Dokumen
+2.0.0 (Updated Screen Structure)
+Tanggal
+Oktober 2026
+Tujuan Dokumen
+Panduan teknis dan fungsional pengembangan prototipe aplikasi mobile Flutter sesuai rancangan antarmuka Figma dan kebutuhan standar UTS.
+
+1. Latar Belakang & Tujuan (Executive Summary)
+Kampung Wisata Topeng Polowijen merupakan destinasi wisata edukasi dan budaya unggulan di Malang. Aplikasi mobile berbasis Flutter ini dikembangkan khusus untuk pengguna (User) agar memudahkan pencarian informasi budaya, reservasi paket kunjungan, melihat agenda event, belanja produk UMKM lokal, serta mengelola akun profil pengguna.
+Dokumen PRD V2 ini telah disesuaikan secara presisi dengan rancangan Figma tampilan mobile dan menerapkan materi pembelajaran:
+Widget Interaction & UI Composition (Card, ListTile, Grid, Buttons, InkWell, Gestures, BottomNavigationBar).
+Navigation and Routing (Navigator.push, pushReplacement, Named Routes, Bottom Navigation Index Routing).
+Form & Input Validation (Form, GlobalKey<FormState>, TextFormField, kriteria validator).
+Package & Plugin Integration:
+google_fonts (Konsistensi tipografi UI)
+intl (Format mata uang Rp dan tanggal)
+shared_preferences (Penyimpanan sesi login & data profil lokal)
+url_launcher (Integrasi peta lokasi & WhatsApp)
+2. Struktur Halaman Aplikasi (Key Screens List)
+Aplikasi mobile Polowijen terdiri dari 7 halaman utama sesuai rancangan desain Figma:
+Login Page: Halaman autentikasi masuk akun bagi pengguna.
+Register Page: Halaman pendaftaran akun baru bagi wisatawan/pengguna.
+Home Page: Dashboard utama dengan banner informasi, kategori pilihan, dan ringkasan konten.
+UMKM Page: Katalog produk usaha mikro/kerajinan lokal (topeng, batik, cendera mata).
+Paket Kunjungan Page: Daftar paket wisata/workshop edukasi beserta form reservasi tiket.
+Event Page: Jadwal & informasi kegiatan kebudayaan/pertunjukan seni di Polowijen.
+Profile Page: Informasi akun pengguna, status login, preferensi, dan tautan bantuan/kontak.
+3. Alur Navigasi & Routing (Architecture Routing)
+Aplikasi menggunakan gabungan Named Routes untuk autentikasi/detail serta BottomNavigationBar Routing untuk navigasi menu utama:
+[ Login Screen ] ◄──(Daftar / Kembali)──► [ Register Screen ]
+       │
+       │ (Login Berhasil / Navigation.pushReplacement)
+       ▼
+┌──────────────────────────────────────────────────────────┐
+│              MAIN SHELL (BottomNavigationBar)            │
+├─────────────┬─────────────┬─────────────────┬────────────┤
+│  Home Page  │  UMKM Page  │ Paket Kunjungan │ Event Page │
+└──────┬──────┴──────┬──────┴────────┬────────┴─────┬──────┘
+       │             │               │              │
+       ▼             ▼               ▼              ▼
+  [Profile Page]  [Detail]     [Form Booking]  [Detail Event]
+
+
+Rincian Rute (Routes Definition)
+Route Name
+Widget / Screen Class
+Deskripsi & Navigasi
+ 
+/login
+LoginScreen
+Form login pengguna dengan validasi input.
+/register
+RegisterScreen
+Form pendaftaran akun pengguna baru.
+/main
+MainContainerScreen
+Shell utama yang membungkus BottomNavigationBar (Home, UMKM, Paket, Event, Profile).
+/home
+HomeScreen
+Tab 1: Dashboard rekomendasi, banner, & quick menu.
+/umkm
+UmkmScreen
+Tab 2: Katalog produk UMKM & opsi beli/tanya pengrajin.
+/paket-kunjungan
+PaketKunjunganScreen
+Tab 3: Listing paket wisata edukasi & workshop.
+/event
+EventScreen
+Tab 4: Daftar acara & agenda kebudayaan Polowijen.
+/profile
+ProfileScreen
+Tab 5: Informasi profil user, preferensi, dan logout.
+/booking-form
+BookingFormScreen
+Halaman form pemesanan tiket/paket kunjungan (dengan FormState validation).
+
+4. Spesifikasi Fitur per Halaman
+4.1 Login & Register Page
+UI Components: TextFormField, ElevatedButton, IconButton (toggle password).
+Validasi:
+Email/Username: Tidak boleh kosong.
+Password: Minimum 6 karakter.
+State / Storage: Menyimpan status login dan nama user ke shared_preferences.
+4.2 Home Page
+UI Components: Carousel Banner Header, Grid/List Card Kategori, Search Input Bar.
+Interaksi: Klik card rekomendasi mengarah ke Halaman Detail atau ke Tab terkait.
+Plugin: google_fonts untuk tipografi UI, intl untuk format nominal harga.
+4.3 UMKM Page
+UI Components: GridView.builder produk lokal (Topeng, Batik, Kerajinan), Chip filter kategori.
+Interaksi & Plugin: Tombol "Beli / Hubungi Pengrajin" mengintegrasikan url_launcher untuk membuka WhatsApp pengrajin.
+4.4 Paket Kunjungan Page
+UI Components: Card Paket Wisata (Harga, Durasi, Fasilitas), Button "Pesan Paket".
+Validation Form Pemesanan:
+Nama Pemesan: Wajib diisi.
+Nomor WhatsApp: Minimal 10 digit.
+Jumlah Peserta: Minimal 1 orang.
+4.5 Event Page
+UI Components: ListView.builder agenda acara (Tanggal, Lokasi, Nama Event, Deskripsi).
+Interaksi: Tombol "Petunjuk Lokasi Event" membuka Google Maps menggunakan url_launcher.
+4.6 Profile Page
+UI Components: Header Avatar User, ListTile Menu (Edit Profil, Riwayat, Bantuan, Logout).
+Fungsi Logout: Menghapus status sesi di shared_preferences dan bernavigasi kembali ke /login via pushReplacementNamed.
+5. Fitur AI Masa Depan (AI Cultural Scanner)
+Nama Fitur: AI Topeng Malang Vision Recognition
+Fungsi: Wisatawan memindai/mengambil foto topeng fisik melalui aplikasi untuk mendapatkan penjelasan sejarah, filosofi karakter, dan tarian yang sesuai secara otomatis.
+6. Matriks Pengujian & Kriteria Penerimaan
+ID Test
+Halaman / Fitur
+Skenario Pengujian
+Hasil yang Diharapkan
+Status
+ 
+TC-01
+Login & Register
+Mengosongkan input dan menekan tombol submit.
+Pesan error validator muncul pada masing-masing field.
+Pass
+TC-02
+Bottom Navigation
+Menekan ikon Home, UMKM, Paket, Event, Profile pada BottomBar.
+Tampilan berpindah sesuai dengan tab halaman yang dipilih.
+Pass
+TC-03
+UMKM / Event Link
+Menekan tombol "Hubungi / Petunjuk Lokasi".
+url_launcher berhasil membuka WhatsApp atau Google Maps.
+Pass
+TC-04
+Form Paket Kunjungan
+Mengisi form reservasi paket kunjungan dengan data valid.
+Validator lolos, notifikasi sukses muncul, dan navigasi berhasil.
+Pass
+TC-05
+Profile & Logout
+Menekan tombol Logout pada Profile Page.
+Sesi shared_preferences dibersihkan dan mengarah ke Login Page.
+Pass
+
+7. Kesimpulan
+PRD V2 ini telah disesuaikan secara utuh dengan struktur 7 halaman utama aplikasi mobile Polowijen (Login, Register, Home, UMKM, Paket Kunjungan, Event, Profile) sesuai desain Figma. Dokumen ini dapat digunakan sebagai acuan pengembangan proyek Flutter dan pelaporan UTS.
