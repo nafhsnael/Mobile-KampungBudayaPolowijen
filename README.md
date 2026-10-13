@@ -6,11 +6,14 @@ Aplikasi mobile berbasis **Flutter** untuk mendukung pariwisata dan edukasi buda
 
 ## 👥 Anggota Kelompok
 
+<<<<<<< HEAD
 | No | Nama Mahasiswa | NIM |
 | :---: | :--- | :---: |
 | 1. | **Nafhisa Nailah Husnah** | 253140707111072 |
 | 2. | **Kasiva Imtiyas Zaidah Iftinan** | 253140707111085 | 
 | 3. | **[Shinta Rahmawati** | 253140707111025 | 
+=======
+
 
 ---
 
@@ -58,4 +61,6 @@ dependencies:
   google_fonts: ^6.1.0
   intl: ^0.19.0
   shared_preferences: ^2.2.2
+<<<<<<< HEAD
   url_launcher: ^6.2.5
+=======

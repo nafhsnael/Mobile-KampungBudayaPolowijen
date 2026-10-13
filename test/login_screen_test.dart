@@ -67,7 +67,7 @@ void main() {
 
     expect(find.text('Dukung UMKM Lokal'), findsOneWidget);
     expect(find.text('Produk unggulan'), findsOneWidget);
-    expect(find.text('Tas Anyam'), findsWidgets);
+    expect(find.text('Topeng Malang Panji Asmoro Bangun'), findsOneWidget);
     final craftCategory = find.text('Kerajinan').first;
     await tester.ensureVisible(craftCategory);
     await tester.tap(craftCategory);
@@ -79,7 +79,7 @@ void main() {
     await tester.ensureVisible(searchField);
     await tester.enterText(searchField, 'Topeng');
     await tester.pumpAndSettle();
-    expect(find.text('Topeng'), findsNWidgets(2));
+    expect(find.textContaining('Topeng Malang'), findsWidgets);
     expect(tester.takeException(), isNull);
   });
 }

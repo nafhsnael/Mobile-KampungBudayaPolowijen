@@ -4,6 +4,7 @@ class UmkmProduct {
     required this.description,
     required this.price,
     required this.category,
+    required this.whatsappNumber,
     this.imageUrl,
   });
 
@@ -11,5 +12,6 @@ class UmkmProduct {
   final String description;
   final int price;
   final String category;
+  final String whatsappNumber;
   final String? imageUrl;
 }

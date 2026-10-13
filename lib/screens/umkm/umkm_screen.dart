@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 import '../../models/umkm_product.dart';
+import '../../utils/url_helper.dart';
 
 class UmkmScreen extends StatefulWidget {
   const UmkmScreen({super.key});
@@ -14,63 +17,106 @@ class _UmkmScreenState extends State<UmkmScreen> {
   static const _brown = Color(0xFF4A281F);
   static const _gold = Color(0xFFC79A48);
   static const _mutedRed = Color(0xFFA64032);
+  // Replace this sample contact with the artisans' verified WhatsApp number.
+  static const _artisanWhatsAppNumber = '6281234567890';
 
   static const _products = <UmkmProduct>[
     UmkmProduct(
+      name: 'Topeng Malang Panji Asmoro Bangun',
+      description: 'Topeng kayu buatan tangan dengan karakter Panji.',
+      price: 350000,
+      category: 'Kerajinan',
+      whatsappNumber: _artisanWhatsAppNumber,
+      imageUrl:
+          'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=800&q=80',
+    ),
+    UmkmProduct(
+      name: 'Topeng Malang Dewi Sekartaji',
+      description: 'Topeng kayu ukir dengan detail khas Dewi Sekartaji.',
+      price: 375000,
+      category: 'Kerajinan',
+      whatsappNumber: _artisanWhatsAppNumber,
+      imageUrl:
+          'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=800&q=80',
+    ),
+    UmkmProduct(
+      name: 'Topeng Bapang Malang',
+      description: 'Topeng karakter Bapang hasil kerajinan perajin lokal.',
+      price: 325000,
+      category: 'Kerajinan',
+      whatsappNumber: _artisanWhatsAppNumber,
+      imageUrl:
+          'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80',
+    ),
+    UmkmProduct(
+      name: 'Kain Batik Tulis Motif Topeng Polowijen',
+      description: 'Kain batik tulis bermotif seni topeng Polowijen.',
+      price: 450000,
+      category: 'Batik',
+      whatsappNumber: _artisanWhatsAppNumber,
+      imageUrl:
+          'https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&w=800&q=80',
+    ),
+    UmkmProduct(
+      name: 'Kaos Souvenir Kampung Topeng Polowijen',
+      description: 'Kaos nyaman dengan ilustrasi Kampung Topeng.',
+      price: 95000,
+      category: 'Souvenir',
+      whatsappNumber: _artisanWhatsAppNumber,
+      imageUrl:
+          'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=800&q=80',
+    ),
+    UmkmProduct(
+      name: 'Gantungan Kunci Miniatur Topeng Malang',
+      description: 'Gantungan kunci mini untuk buah tangan khas Malang.',
+      price: 25000,
+      category: 'Souvenir',
+      whatsappNumber: _artisanWhatsAppNumber,
+      imageUrl:
+          'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80',
+    ),
+    UmkmProduct(
+      name: 'Miniatur Patung Penari Topeng',
+      description: 'Miniatur penari topeng sebagai hiasan rumah.',
+      price: 185000,
+      category: 'Kerajinan',
+      whatsappNumber: _artisanWhatsAppNumber,
+      imageUrl:
+          'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&w=800&q=80',
+    ),
+    UmkmProduct(
+      name: 'Selendang Batik Khas Polowijen',
+      description: 'Selendang batik lembut dengan motif tradisional.',
+      price: 175000,
+      category: 'Batik',
+      whatsappNumber: _artisanWhatsAppNumber,
+      imageUrl:
+          'https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&w=800&q=80',
+    ),
+    UmkmProduct(
       name: 'Tas Anyam',
-      description: 'Tas anyaman mendong untuk aktivitas harian.',
-      price: 25000,
+      description: 'Tas anyaman tangan untuk menemani aktivitas harian.',
+      price: 145000,
       category: 'Kerajinan',
+      whatsappNumber: _artisanWhatsAppNumber,
+      imageUrl:
+          'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80',
     ),
     UmkmProduct(
-      name: 'Batik Tulis',
-      description: 'Batik tulis dengan ragam motif budaya lokal.',
-      price: 25000,
-      category: 'Batik',
-    ),
-    UmkmProduct(
-      name: 'Topeng',
-      description: 'Topeng karakter khas Malangan.',
-      price: 25000,
-      category: 'Kerajinan',
-    ),
-    UmkmProduct(
-      name: 'Ecoprint',
-      description: 'Kain dengan motif alami dari dedaunan.',
-      price: 25000,
-      category: 'Batik',
-    ),
-    UmkmProduct(
-      name: 'Anyaman',
-      description: 'Kerajinan tangan lokal yang unik.',
-      price: 25000,
-      category: 'Kerajinan',
-    ),
-    UmkmProduct(
-      name: 'Suvenir',
-      description: 'Buah tangan untuk kenang-kenangan.',
-      price: 25000,
-      category: 'Suvenir',
-    ),
-    UmkmProduct(
-      name: 'Jajanan',
-      description: 'Camilan tradisional khas daerah.',
-      price: 25000,
-      category: 'Kuliner',
-    ),
-    UmkmProduct(
-      name: 'Minuman',
-      description: 'Minuman segar tradisional.',
-      price: 25000,
-      category: 'Kuliner',
+      name: 'Kipas Lukis Motif Topeng',
+      description: 'Kipas dekoratif yang dilukis dengan motif topeng.',
+      price: 65000,
+      category: 'Souvenir',
+      whatsappNumber: _artisanWhatsAppNumber,
+      imageUrl:
+          'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=800&q=80',
     ),
   ];
 
   static const _categories = <_ProductCategory>[
     _ProductCategory(name: 'Kerajinan', icon: Icons.backpack_outlined),
     _ProductCategory(name: 'Batik', icon: Icons.checkroom_outlined),
-    _ProductCategory(name: 'Suvenir', icon: Icons.card_giftcard_outlined),
-    _ProductCategory(name: 'Kuliner', icon: Icons.restaurant_outlined),
+    _ProductCategory(name: 'Souvenir', icon: Icons.card_giftcard_outlined),
   ];
 
   final _searchController = TextEditingController();
@@ -106,6 +152,29 @@ class _UmkmScreenState extends State<UmkmScreen> {
     });
   }
 
+  Future<void> _buyViaWhatsApp(UmkmProduct product) async {
+    try {
+      final launched = await UrlHelper.openWhatsApp(
+        product.whatsappNumber,
+        message: 'Halo, saya tertarik ingin membeli produk ${product.name}.',
+      );
+      if (!launched && mounted) {
+        UrlHelper.showLaunchError(
+          context,
+          'WhatsApp tidak dapat dibuka. Silakan coba lagi.',
+        );
+      }
+    } on PlatformException catch (error) {
+      debugPrint('Gagal membuka WhatsApp: $error');
+      if (mounted) {
+        UrlHelper.showLaunchError(
+          context,
+          'Terjadi kendala saat membuka WhatsApp. Silakan coba lagi.',
+        );
+      }
+    }
+  }
+
   void _showProduct(UmkmProduct product) {
     showModalBottomSheet<void>(
       context: context,
@@ -133,6 +202,7 @@ class _UmkmScreenState extends State<UmkmScreen> {
               ),
               const SizedBox(height: 18),
               _ProductImage(
+                product: product,
                 height: 190,
                 borderRadius: BorderRadius.circular(16),
               ),
@@ -161,23 +231,16 @@ class _UmkmScreenState extends State<UmkmScreen> {
               ),
               const SizedBox(height: 16),
               FilledButton.icon(
-                onPressed: () {
+                onPressed: () async {
                   Navigator.pop(sheetContext);
-                  ScaffoldMessenger.of(context)
-                    ..hideCurrentSnackBar()
-                    ..showSnackBar(
-                      SnackBar(
-                        content:
-                            Text('${product.name} ditambahkan ke keranjang'),
-                      ),
-                    );
+                  await _buyViaWhatsApp(product);
                 },
                 style: FilledButton.styleFrom(
                   backgroundColor: _mutedRed,
                   foregroundColor: Colors.white,
                 ),
-                icon: const Icon(Icons.shopping_cart_outlined),
-                label: const Text('Tambah ke keranjang'),
+                icon: const Icon(Icons.chat_outlined),
+                label: const Text('Beli via WhatsApp'),
               ),
             ],
           ),
@@ -382,6 +445,7 @@ class _UmkmScreenState extends State<UmkmScreen> {
                             isFavorite: _favorites.contains(product.name),
                             onFavoriteTap: () => _toggleFavorite(product),
                             onTap: () => _showProduct(product),
+                            onBuyTap: () => _buyViaWhatsApp(product),
                           ),
                         ),
                       );
@@ -402,25 +466,28 @@ class _UmkmScreenState extends State<UmkmScreen> {
                           ),
                         ),
                       )
-                    : SliverGrid(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 12,
-                          mainAxisSpacing: 12,
-                          childAspectRatio: 0.67,
-                        ),
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) {
+                    : SliverToBoxAdapter(
+                        child: GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 12,
+                            mainAxisSpacing: 12,
+                            mainAxisExtent: 302,
+                          ),
+                          itemCount: products.length,
+                          itemBuilder: (context, index) {
                             final product = products[index];
                             return _CatalogProductCard(
                               product: product,
                               isFavorite: _favorites.contains(product.name),
                               onFavoriteTap: () => _toggleFavorite(product),
                               onTap: () => _showProduct(product),
+                              onBuyTap: () => _buyViaWhatsApp(product),
                             );
                           },
-                          childCount: products.length,
                         ),
                       ),
               ),
@@ -498,12 +565,14 @@ class _FeaturedProductCard extends StatelessWidget {
     required this.isFavorite,
     required this.onFavoriteTap,
     required this.onTap,
+    required this.onBuyTap,
   });
 
   final UmkmProduct product;
   final bool isFavorite;
   final VoidCallback onFavoriteTap;
   final VoidCallback onTap;
+  final VoidCallback onBuyTap;
 
   @override
   Widget build(BuildContext context) {
@@ -520,6 +589,7 @@ class _FeaturedProductCard extends StatelessWidget {
               Expanded(
                 flex: 5,
                 child: _ProductImage(
+                  product: product,
                   borderRadius: BorderRadius.circular(6),
                   badge: _FavoriteButton(
                     selected: isFavorite,
@@ -564,6 +634,22 @@ class _FeaturedProductCard extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
+                    const SizedBox(height: 4),
+                    SizedBox(
+                      height: 28,
+                      child: OutlinedButton.icon(
+                        onPressed: onBuyTap,
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.white54),
+                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                          textStyle: const TextStyle(fontSize: 9),
+                          visualDensity: VisualDensity.compact,
+                        ),
+                        icon: const Icon(Icons.chat_outlined, size: 12),
+                        label: const Text('Beli via WA'),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -581,72 +667,114 @@ class _CatalogProductCard extends StatelessWidget {
     required this.isFavorite,
     required this.onFavoriteTap,
     required this.onTap,
+    required this.onBuyTap,
   });
 
   final UmkmProduct product;
   final bool isFavorite;
   final VoidCallback onFavoriteTap;
   final VoidCallback onTap;
+  final VoidCallback onBuyTap;
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: _UmkmScreenState._brown,
-      borderRadius: BorderRadius.circular(8),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
-        child: Padding(
-          padding: const EdgeInsets.all(7),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                flex: 5,
-                child: _ProductImage(
-                  borderRadius: BorderRadius.circular(6),
-                  badge: _FavoriteButton(
-                    selected: isFavorite,
-                    onTap: onFavoriteTap,
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      color: Colors.white,
+      elevation: 2,
+      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      child: Padding(
+        padding: const EdgeInsets.all(9),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 112,
+              child: _ProductImage(
+                product: product,
+                borderRadius: BorderRadius.circular(10),
+                badge: _FavoriteButton(
+                  selected: isFavorite,
+                  onTap: onFavoriteTap,
+                ),
+              ),
+            ),
+            const SizedBox(height: 7),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF4E9D8),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  product.category,
+                  style: const TextStyle(
+                    color: _UmkmScreenState._brown,
+                    fontSize: 9,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
-              const SizedBox(height: 6),
-              Text(
+            ),
+            const SizedBox(height: 5),
+            InkWell(
+              onTap: onTap,
+              child: Text(
                 product.name,
-                maxLines: 1,
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: _UmkmScreenState._brown,
                   fontSize: 11,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w700,
+                  height: 1.2,
                 ),
               ),
-              const SizedBox(height: 2),
-              Expanded(
-                flex: 2,
-                child: Text(
-                  product.description,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: Color(0xFFD8C9BE),
-                    fontSize: 8,
-                    height: 1.25,
-                  ),
-                ),
+            ),
+            const Spacer(),
+            Text(
+              _formatPrice(product.price),
+              style: const TextStyle(
+                color: _UmkmScreenState._mutedRed,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
               ),
-              const SizedBox(height: 2),
-              Text(
-                _formatPrice(product.price),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 9,
-                  fontWeight: FontWeight.w600,
+            ),
+            const SizedBox(height: 5),
+            SizedBox(
+              width: double.infinity,
+              height: 32,
+              child: FilledButton.icon(
+                onPressed: onBuyTap,
+                style: FilledButton.styleFrom(
+                  backgroundColor: _UmkmScreenState._mutedRed,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  textStyle: const TextStyle(fontSize: 10),
+                  visualDensity: VisualDensity.compact,
                 ),
+                icon: const Icon(Icons.chat_outlined, size: 14),
+                label: const Text('Beli via WA'),
               ),
-            ],
-          ),
+            ),
+            SizedBox(
+              width: double.infinity,
+              height: 24,
+              child: TextButton(
+                onPressed: onTap,
+                style: TextButton.styleFrom(
+                  foregroundColor: _UmkmScreenState._brown,
+                  padding: EdgeInsets.zero,
+                  textStyle: const TextStyle(fontSize: 10),
+                  visualDensity: VisualDensity.compact,
+                ),
+                child: const Text('Detail Produk'),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -655,11 +783,13 @@ class _CatalogProductCard extends StatelessWidget {
 
 class _ProductImage extends StatelessWidget {
   const _ProductImage({
+    required this.product,
     required this.borderRadius,
     this.height,
     this.badge,
   });
 
+  final UmkmProduct product;
   final BorderRadius borderRadius;
   final double? height;
   final Widget? badge;
@@ -674,9 +804,26 @@ class _ProductImage extends StatelessWidget {
         children: [
           DecoratedBox(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: const Color(0xFFF1E9DE),
               borderRadius: borderRadius,
             ),
+            child: product.imageUrl == null
+                ? _imagePlaceholder
+                : ClipRRect(
+                    borderRadius: borderRadius,
+                    child: Image.network(
+                      product.imageUrl!,
+                      width: double.infinity,
+                      height: height,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return _imagePlaceholder;
+                      },
+                      errorBuilder: (context, error, stackTrace) =>
+                          _imagePlaceholder,
+                    ),
+                  ),
           ),
           if (badge != null)
             Positioned(
@@ -688,6 +835,14 @@ class _ProductImage extends StatelessWidget {
       ),
     );
   }
+
+  Widget get _imagePlaceholder => Center(
+        child: Icon(
+          Icons.museum_outlined,
+          size: 34,
+          color: _UmkmScreenState._brown.withValues(alpha: 0.55),
+        ),
+      );
 }
 
 class _FavoriteButton extends StatelessWidget {
@@ -718,13 +873,9 @@ class _FavoriteButton extends StatelessWidget {
 }
 
 String _formatPrice(int value) {
-  final digits = value.toString();
-  final result = StringBuffer();
-  for (var index = 0; index < digits.length; index++) {
-    if (index > 0 && (digits.length - index) % 3 == 0) {
-      result.write('.');
-    }
-    result.write(digits[index]);
-  }
-  return 'Rp${result.toString()}';
+  return NumberFormat.currency(
+    locale: 'id_ID',
+    symbol: 'Rp',
+    decimalDigits: 0,
+  ).format(value);
 }
