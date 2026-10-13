@@ -50,7 +50,11 @@ void main() {
     for (final (label, pageTitle) in tabs) {
       await tester.tap(find.text(label).last);
       await tester.pumpAndSettle();
-      expect(find.text(pageTitle), findsOneWidget);
+      expect(
+          find.text(pageTitle),
+          findsNWidgets(
+            pageTitle == 'Paket Kunjungan' ? 2 : 1,
+          ));
     }
   });
 

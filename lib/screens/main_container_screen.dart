@@ -72,15 +72,23 @@ class _MainContainerScreenState extends State<MainContainerScreen> {
 
     return Scaffold(
       body: IndexedStack(index: _selectedIndex, children: screens),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        type: BottomNavigationBarType.fixed,
-        onTap: (index) => setState(() => _selectedIndex = index),
-        items: [
+      bottomNavigationBar: NavigationBar(
+        height: 64,
+        backgroundColor: const Color(0xFFA44132),
+        indicatorColor: const Color(0xFFFFF7EA),
+        indicatorShape: const CircleBorder(),
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: (index) =>
+            setState(() => _selectedIndex = index),
+        destinations: [
           for (final destination in _destinations)
-            BottomNavigationBarItem(
-              icon: Icon(destination.icon),
-              activeIcon: Icon(destination.selectedIcon),
+            NavigationDestination(
+              icon: Icon(destination.icon, color: Colors.white),
+              selectedIcon: Icon(
+                destination.selectedIcon,
+                color: const Color(0xFF4B291F),
+              ),
               label: destination.label,
             ),
         ],
