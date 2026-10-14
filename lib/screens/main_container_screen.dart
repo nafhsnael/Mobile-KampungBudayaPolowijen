@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../screens/event/event_screen.dart';
+import '../screens/home/article_screen.dart';
+import '../screens/home/explore_screen.dart';
 import '../screens/home/home_screen.dart';
+import '../models/cultural_event.dart';
 import '../screens/paket_kunjungan/paket_kunjungan_screen.dart';
 import '../screens/profile/profile_screen.dart';
 import '../screens/umkm/umkm_screen.dart';
@@ -23,6 +26,9 @@ class MainContainerScreen extends StatefulWidget {
 
 class _MainContainerScreenState extends State<MainContainerScreen> {
   late int _selectedIndex = widget.initialIndex;
+  bool _showArticle = false;
+  bool _showExplore = false;
+  String? _openEventName;
   String? _userName;
 
   static const _destinations = [
@@ -63,15 +69,31 @@ class _MainContainerScreenState extends State<MainContainerScreen> {
   @override
   Widget build(BuildContext context) {
     final screens = [
-      HomeScreen(userName: _userName),
+      HomeScreen(
+        userName: _userName,
+        onNavigateToTab: (index) => setState(() => _selectedIndex = index),
+        onOpenArticle: () => setState(() => _showArticle = true),
+        onOpenExplore: () => setState(() => _showExplore = true),
+        onOpenEvent: () => _openEvent(CulturalEvent.tariTopengName),
+      ),
       const UmkmScreen(),
       const PaketKunjunganScreen(),
-      const EventScreen(),
+      EventScreen(
+        onOpenProfile: () => setState(() => _selectedIndex = 4),
+        openEventName: _openEventName,
+      ),
       ProfileScreen(userName: _userName),
     ];
 
     return Scaffold(
-      body: IndexedStack(index: _selectedIndex, children: screens),
+      body: _showArticle
+          ? ArticleScreen(onBack: () => setState(() => _showArticle = false))
+          : _showExplore
+              ? ExploreScreen(
+                  onBack: () => setState(() => _showExplore = false),
+                  onOpenEvent: _openEvent,
+                )
+              : IndexedStack(index: _selectedIndex, children: screens),
       bottomNavigationBar: NavigationBar(
         height: 64,
         backgroundColor: const Color(0xFFA44132),
@@ -79,8 +101,12 @@ class _MainContainerScreenState extends State<MainContainerScreen> {
         indicatorShape: const CircleBorder(),
         labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
         selectedIndex: _selectedIndex,
-        onDestinationSelected: (index) =>
-            setState(() => _selectedIndex = index),
+        onDestinationSelected: (index) => setState(() {
+          _selectedIndex = index;
+          _showArticle = false;
+          _showExplore = false;
+          _openEventName = null;
+        }),
         destinations: [
           for (final destination in _destinations)
             NavigationDestination(
@@ -94,6 +120,15 @@ class _MainContainerScreenState extends State<MainContainerScreen> {
         ],
       ),
     );
+  }
+
+  void _openEvent(String eventName) {
+    setState(() {
+      _selectedIndex = 3;
+      _showArticle = false;
+      _showExplore = false;
+      _openEventName = eventName;
+    });
   }
 }
 

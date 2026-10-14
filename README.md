@@ -11,7 +11,7 @@ Aplikasi mobile berbasis **Flutter** untuk mendukung pariwisata dan edukasi buda
 | :---: | :--- | :---: |
 | 1. | **Nafhisa Nailah Husnah** | 253140707111072 |
 | 2. | **Kasiva Imtiyas Zaidah Iftinan** | 253140707111085 | 
-| 3. | **[Shinta Rahmawati** | 253140707111025 | 
+| 3. | **Shinta Rahmawati** | 253140707111025 | 
 =======
 
 

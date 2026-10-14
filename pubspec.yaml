@@ -24,3 +24,9 @@ flutter:
   assets:
     - assets/images/login.jpg
     - assets/images/logo.png
+    - assets/images/gamelan.png
+    - assets/images/taritopeng.png
+    - assets/images/festivalkampung.jpeg
+    - assets/images/topeng.jpg
+    - assets/images/mbatik.png
+    - assets/images/nyadran.png

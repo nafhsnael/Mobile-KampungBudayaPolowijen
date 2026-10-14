@@ -40,7 +40,7 @@ void main() {
     );
 
     final tabs = [
-      ('Home', 'Selamat datang, Tester!'),
+      ('Home', 'Kegiatan terdekat'),
       ('UMKM', 'Dukung UMKM Lokal'),
       ('Paket', 'Paket Kunjungan'),
       ('Event', 'Event & Agenda'),
