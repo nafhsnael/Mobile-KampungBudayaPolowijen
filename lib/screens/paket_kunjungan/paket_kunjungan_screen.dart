@@ -20,6 +20,7 @@ class _PaketKunjunganScreenState extends State<PaketKunjunganScreen> {
       pricePerPerson: 50000,
       duration: '3 jam',
       facilities: ['Pemandu lokal', 'Dokumentasi', 'Edukasi budaya'],
+      imageAsset: 'assets/images/festivalkampung.jpeg',
     ),
     VisitPackage(
       name: 'Paket Jelajah Budaya',
@@ -27,6 +28,7 @@ class _PaketKunjunganScreenState extends State<PaketKunjunganScreen> {
       pricePerPerson: 35000,
       duration: '2 jam',
       facilities: ['Pemandu lokal', 'Edukasi budaya'],
+      imageAsset: 'assets/images/nyadran.png',
     ),
     VisitPackage(
       name: 'Paket Tari Tradisi',
@@ -34,6 +36,7 @@ class _PaketKunjunganScreenState extends State<PaketKunjunganScreen> {
       pricePerPerson: 50000,
       duration: '2 jam',
       facilities: ['Pertunjukan tari', 'Pemandu lokal'],
+      imageAsset: 'assets/images/taritopeng.png',
     ),
     VisitPackage(
       name: 'Paket Belajar Topeng',
@@ -41,6 +44,7 @@ class _PaketKunjunganScreenState extends State<PaketKunjunganScreen> {
       pricePerPerson: 50000,
       duration: '2 jam',
       facilities: ['Topeng', 'Alat dan bahan', 'Pemandu'],
+      imageAsset: 'assets/images/topeng.jpg',
     ),
     VisitPackage(
       name: 'Paket Sinau Budaya',
@@ -48,6 +52,7 @@ class _PaketKunjunganScreenState extends State<PaketKunjunganScreen> {
       pricePerPerson: 35000,
       duration: '2 jam',
       facilities: ['Pemandu lokal', 'Edukasi budaya'],
+      imageAsset: 'assets/images/gamelan.png',
     ),
   ];
 
@@ -58,6 +63,7 @@ class _PaketKunjunganScreenState extends State<PaketKunjunganScreen> {
       time: '19.00–21.00',
       description: 'Berbagi pengalaman, melihat kehidupan serta melestarikan '
           'kesenian dan budaya di Kampung Polowijen.',
+      imageAsset: 'assets/images/nyadran.png',
     ),
     _RoutineActivity(
       name: 'Bantengan/Jaranan',
@@ -65,6 +71,7 @@ class _PaketKunjunganScreenState extends State<PaketKunjunganScreen> {
       time: '19.00–21.00',
       description: 'Menyaksikan kesenian Bantengan dan Jaranan yang tumbuh di '
           'tengah masyarakat Kampung Polowijen.',
+      imageAsset: 'assets/images/festivalkampung.jpeg',
     ),
     _RoutineActivity(
       name: 'Gladhi Tari Tradisi',
@@ -72,6 +79,7 @@ class _PaketKunjunganScreenState extends State<PaketKunjunganScreen> {
       time: '15.00–17.00',
       description: 'Latihan tari tradisional untuk mengenal gerak dan cerita '
           'di balik kesenian Malang.',
+      imageAsset: 'assets/images/taritopeng.png',
     ),
     _RoutineActivity(
       name: 'Hasta Karya/Liwetan',
@@ -79,6 +87,7 @@ class _PaketKunjunganScreenState extends State<PaketKunjunganScreen> {
       time: '10.00–12.00',
       description: 'Berkegiatan kreatif dan menikmati kebersamaan melalui '
           'tradisi warga Kampung Polowijen.',
+      imageAsset: 'assets/images/mbatik.png',
     ),
     _RoutineActivity(
       name: 'Gladhi Tari Topeng',
@@ -86,6 +95,7 @@ class _PaketKunjunganScreenState extends State<PaketKunjunganScreen> {
       time: '15.00–17.00',
       description: 'Belajar dasar tari topeng dan mengenal karakter dalam '
           'kesenian Topeng Malangan.',
+      imageAsset: 'assets/images/topeng.jpg',
     ),
     _RoutineActivity(
       name: 'Sinau Budaya',
@@ -93,6 +103,7 @@ class _PaketKunjunganScreenState extends State<PaketKunjunganScreen> {
       time: '09.00–11.00',
       description: 'Belajar tradisi, sejarah, dan cerita budaya langsung '
           'bersama warga setempat.',
+      imageAsset: 'assets/images/gamelan.png',
     ),
   ];
 
@@ -295,7 +306,7 @@ class _PaketKunjunganScreenState extends State<PaketKunjunganScreen> {
           children: [
             Expanded(
               child: Image.asset(
-                'assets/images/login.jpg',
+                package.imageAsset ?? 'assets/images/login.jpg',
                 fit: BoxFit.cover,
                 alignment: Alignment.center,
               ),
@@ -359,7 +370,7 @@ class _PaketKunjunganScreenState extends State<PaketKunjunganScreen> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: Image.asset(
-                    'assets/images/login.jpg',
+                    activity.imageAsset,
                     width: 72,
                     height: 80,
                     fit: BoxFit.cover,
@@ -439,7 +450,10 @@ class _PaketKunjunganScreenState extends State<PaketKunjunganScreen> {
         SizedBox(
           height: 210,
           width: double.infinity,
-          child: Image.asset('assets/images/login.jpg', fit: BoxFit.cover),
+          child: Image.asset(
+            package.imageAsset ?? 'assets/images/login.jpg',
+            fit: BoxFit.cover,
+          ),
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 14, 16, 18),
@@ -578,7 +592,7 @@ class _PaketKunjunganScreenState extends State<PaketKunjunganScreen> {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: Image.asset(
-                        'assets/images/login.jpg',
+                        activity.imageAsset,
                         width: 76,
                         height: 76,
                         fit: BoxFit.cover,
@@ -690,12 +704,14 @@ class _RoutineActivity {
     required this.day,
     required this.time,
     required this.description,
+    required this.imageAsset,
   });
 
   final String name;
   final String day;
   final String time;
   final String description;
+  final String imageAsset;
 }
 
 class _BannerDot extends StatelessWidget {

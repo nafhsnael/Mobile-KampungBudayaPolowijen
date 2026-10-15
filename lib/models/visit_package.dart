@@ -5,6 +5,7 @@ class VisitPackage {
     required this.pricePerPerson,
     required this.duration,
     this.facilities = const [],
+    this.imageAsset,
     this.imageUrl,
   });
 
@@ -13,5 +14,6 @@ class VisitPackage {
   final int pricePerPerson;
   final String duration;
   final List<String> facilities;
+  final String? imageAsset;
   final String? imageUrl;
 }
