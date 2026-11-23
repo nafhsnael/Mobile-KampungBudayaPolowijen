@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:polowijen_mobile/screens/main_container_screen.dart';
+import 'package:polowijen_mobile/features/dashboard/presentation/pages/main_container_screen.dart';
 
 void main() {
   testWidgets('Home explore banner opens category details', (tester) async {

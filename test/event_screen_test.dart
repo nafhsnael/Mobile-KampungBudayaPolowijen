@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:polowijen_mobile/screens/event/event_screen.dart';
+import 'package:polowijen_mobile/features/event/presentation/pages/event_screen.dart';
 
 void main() {
   testWidgets('each event card opens its detail page', (tester) async {

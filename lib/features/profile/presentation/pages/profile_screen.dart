@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../config/routes.dart';
-import '../../models/app_user.dart';
-import '../../utils/session_storage.dart';
+import '../../../../core/config/routes.dart';
+import '../../../../core/utils/session_storage.dart';
+import '../../domain/entities/app_user.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({this.userName, super.key});

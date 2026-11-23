@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../models/cultural_event.dart';
-import '../../utils/url_helper.dart';
+import '../../../../core/utils/url_helper.dart';
+import '../../domain/entities/cultural_event.dart';
 
 class EventScreen extends StatefulWidget {
   const EventScreen({this.onOpenProfile, this.openEventName, super.key});

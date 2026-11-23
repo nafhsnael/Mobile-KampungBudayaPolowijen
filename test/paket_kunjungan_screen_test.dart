@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:polowijen_mobile/screens/paket_kunjungan/paket_kunjungan_screen.dart';
+import 'package:polowijen_mobile/features/package/presentation/pages/paket_kunjungan_screen.dart';
 
 void main() {
   setUpAll(() {

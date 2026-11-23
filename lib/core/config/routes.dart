@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../screens/auth/login_screen.dart';
-import '../screens/auth/register_screen.dart';
-import '../screens/main_container_screen.dart';
-import '../screens/paket_kunjungan/booking_form_screen.dart';
+import '../../features/auth/presentation/pages/login_screen.dart';
+import '../../features/auth/presentation/pages/register_screen.dart';
+import '../../features/dashboard/presentation/pages/main_container_screen.dart';
+import '../../features/package/presentation/pages/booking_form_screen.dart';
 
 abstract final class AppRoutes {
   static const login = '/login';

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../screens/event/event_screen.dart';
-import '../screens/home/article_screen.dart';
-import '../screens/home/explore_screen.dart';
-import '../screens/home/home_screen.dart';
-import '../models/cultural_event.dart';
-import '../screens/paket_kunjungan/paket_kunjungan_screen.dart';
-import '../screens/profile/profile_screen.dart';
-import '../screens/umkm/umkm_screen.dart';
-import '../utils/session_storage.dart';
+import '../../../../core/utils/session_storage.dart';
+import '../../../event/domain/entities/cultural_event.dart';
+import '../../../event/presentation/pages/event_screen.dart';
+import '../../../home/presentation/pages/article_screen.dart';
+import '../../../home/presentation/pages/explore_screen.dart';
+import '../../../home/presentation/pages/home_screen.dart';
+import '../../../package/presentation/pages/paket_kunjungan_screen.dart';
+import '../../../profile/presentation/pages/profile_screen.dart';
+import '../../../umkm/presentation/pages/umkm_screen.dart';
 
 class MainContainerScreen extends StatefulWidget {
   const MainContainerScreen({

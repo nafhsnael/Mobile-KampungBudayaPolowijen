@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../widgets/primary_button.dart';
+import '../../../../core/widgets/primary_button.dart';
 
 class BookingFormScreen extends StatefulWidget {
   const BookingFormScreen({super.key});

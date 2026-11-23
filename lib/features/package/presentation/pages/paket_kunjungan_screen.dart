@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../config/routes.dart';
-import '../../config/theme.dart';
-import '../../models/visit_package.dart';
+import '../../../../core/config/routes.dart';
+import '../../../../core/config/theme.dart';
+import '../../domain/entities/visit_package.dart';
 
 class PaketKunjunganScreen extends StatefulWidget {
   const PaketKunjunganScreen({super.key});

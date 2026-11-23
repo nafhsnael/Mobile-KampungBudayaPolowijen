@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:polowijen_mobile/screens/auth/register_screen.dart';
+import 'package:polowijen_mobile/features/auth/presentation/pages/register_screen.dart';
 
 void main() {
   testWidgets('register screen shows the designed form and validates fields',

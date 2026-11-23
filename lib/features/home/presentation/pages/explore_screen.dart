@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../models/cultural_event.dart';
+import '../../../event/domain/entities/cultural_event.dart';
 
 class ExploreScreen extends StatefulWidget {
   const ExploreScreen({

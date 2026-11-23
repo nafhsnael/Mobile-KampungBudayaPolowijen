@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-import '../../models/umkm_product.dart';
-import '../../utils/url_helper.dart';
+import '../../../../core/utils/url_helper.dart';
+import '../../domain/entities/umkm_product.dart';
 
 class UmkmScreen extends StatefulWidget {
   const UmkmScreen({super.key});

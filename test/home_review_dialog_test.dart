@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:polowijen_mobile/screens/home/home_screen.dart';
+import 'package:polowijen_mobile/features/home/presentation/pages/home_screen.dart';
 
 void main() {
   testWidgets('rating and visitor review dialogs work together',

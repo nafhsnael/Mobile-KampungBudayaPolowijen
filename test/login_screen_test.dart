@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:polowijen_mobile/screens/auth/login_screen.dart';
-import 'package:polowijen_mobile/screens/main_container_screen.dart';
-import 'package:polowijen_mobile/screens/umkm/umkm_screen.dart';
+import 'package:polowijen_mobile/features/auth/presentation/pages/login_screen.dart';
+import 'package:polowijen_mobile/features/dashboard/presentation/pages/main_container_screen.dart';
+import 'package:polowijen_mobile/features/umkm/presentation/pages/umkm_screen.dart';
 
 void main() {
   setUpAll(() {

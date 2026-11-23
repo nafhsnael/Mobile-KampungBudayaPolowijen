@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../config/routes.dart';
-import '../../utils/session_storage.dart';
+import '../../../../core/config/routes.dart';
+import '../../../../core/utils/session_storage.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});

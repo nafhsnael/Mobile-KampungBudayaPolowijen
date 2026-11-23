@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'config/routes.dart';
-import 'config/theme.dart';
+import 'core/config/routes.dart';
+import 'core/config/theme.dart';
 
 class PolowijenApp extends StatelessWidget {
   const PolowijenApp({required this.isLoggedIn, super.key});
