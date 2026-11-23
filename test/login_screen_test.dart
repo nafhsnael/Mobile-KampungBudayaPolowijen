@@ -4,10 +4,15 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:polowijen_mobile/features/auth/presentation/pages/login_screen.dart';
 import 'package:polowijen_mobile/features/dashboard/presentation/pages/main_container_screen.dart';
 import 'package:polowijen_mobile/features/umkm/presentation/pages/umkm_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   setUpAll(() {
     GoogleFonts.config.allowRuntimeFetching = false;
+  });
+
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
   });
 
   testWidgets('validates required fields and minimum password length',

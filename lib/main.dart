@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'app.dart';
-import 'core/utils/session_storage.dart';
 
-Future<void> main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  final isLoggedIn = await SessionStorage.isLoggedIn();
-
-  runApp(PolowijenApp(isLoggedIn: isLoggedIn));
+  runApp(const PolowijenApp());
 }

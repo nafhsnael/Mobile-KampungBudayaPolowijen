@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../../features/auth/presentation/pages/login_screen.dart';
 import '../../features/auth/presentation/pages/register_screen.dart';
+import '../../features/dashboard/presentation/pages/landing_page.dart';
 import '../../features/dashboard/presentation/pages/main_container_screen.dart';
 import '../../features/package/presentation/pages/booking_form_screen.dart';
 
 abstract final class AppRoutes {
   static const login = '/login';
   static const register = '/register';
+  static const landing = '/landing';
   static const main = '/main';
   static const home = '/home';
   static const umkm = '/umkm';
@@ -33,9 +35,14 @@ abstract final class AppRoutes {
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case login:
-      case '/':
         return MaterialPageRoute<void>(
           builder: (_) => const LoginScreen(),
+          settings: settings,
+        );
+      case landing:
+      case '/':
+        return MaterialPageRoute<void>(
+          builder: (_) => const LandingPage(),
           settings: settings,
         );
       case register:

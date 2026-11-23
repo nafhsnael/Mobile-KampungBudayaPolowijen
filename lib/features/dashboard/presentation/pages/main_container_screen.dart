@@ -8,6 +8,7 @@ import '../../../home/presentation/pages/explore_screen.dart';
 import '../../../home/presentation/pages/home_screen.dart';
 import '../../../package/presentation/pages/paket_kunjungan_screen.dart';
 import '../../../profile/presentation/pages/profile_screen.dart';
+import '../../../tour_guide/presentation/widgets/tour_guide_launcher.dart';
 import '../../../umkm/presentation/pages/umkm_screen.dart';
 
 class MainContainerScreen extends StatefulWidget {
@@ -82,7 +83,10 @@ class _MainContainerScreenState extends State<MainContainerScreen> {
         onOpenProfile: () => setState(() => _selectedIndex = 4),
         openEventName: _openEventName,
       ),
-      ProfileScreen(userName: _userName),
+      ProfileScreen(
+        userName: _userName,
+        onUserNameChanged: (name) => setState(() => _userName = name),
+      ),
     ];
 
     return Scaffold(
@@ -94,6 +98,9 @@ class _MainContainerScreenState extends State<MainContainerScreen> {
                   onOpenEvent: _openEvent,
                 )
               : IndexedStack(index: _selectedIndex, children: screens),
+      floatingActionButton: const TourGuideLauncher(
+        heroTag: 'dashboard-tour-guide',
+      ),
       bottomNavigationBar: NavigationBar(
         height: 64,
         backgroundColor: const Color(0xFFA44132),

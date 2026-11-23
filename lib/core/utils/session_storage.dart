@@ -15,12 +15,17 @@ abstract final class SessionStorage {
   }
 
   static Future<bool> saveSession(String userName) async {
-    final preferences = await SharedPreferences.getInstance();
-    final nameSaved = await preferences.setString(_userNameKey, userName);
+    final nameSaved = await updateUserName(userName);
     if (!nameSaved) {
       return false;
     }
+    final preferences = await SharedPreferences.getInstance();
     return preferences.setBool(_isLoggedInKey, true);
+  }
+
+  static Future<bool> updateUserName(String userName) async {
+    final preferences = await SharedPreferences.getInstance();
+    return preferences.setString(_userNameKey, userName);
   }
 
   static Future<bool> clearSession() async {

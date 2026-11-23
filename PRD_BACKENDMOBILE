@@ -1,0 +1,234 @@
+# PRD Backend Mobile - Polowijen Cultural & Tourism App
+
+**Tanggal:** 23 November 2026  
+**Penulis:** @naila
+
+## Ringkasan & Tujuan
+
+Backend ini adalah satu REST API yang melayani 17 fitur aplikasi mobile Flutter Polowijen (sisi pengguna): autentikasi, profil, artikel, rating dan ulasan, jelajah Polowijen, UMKM dan wishlist, paket kunjungan, jadwal rutin, serta event.
+
+**Tujuan:**
+
+- Menyimpan dan menyajikan konten (artikel, UMKM, paket, jadwal, event) untuk 5 tab aplikasi: Home, UMKM, Paket Kunjungan, Event, Profile.
+- Mengganti sesi lokal (shared_preferences) dengan autentikasi berbasis token, sehingga akun, wishlist, dan ulasan tersimpan di server dan ikut ke perangkat lain.
+- Menjadi kontrak data yang jelas antara tim Flutter dan backend: setiap layar punya endpoint dan bentuk respons yang terdefinisi.
+
+## Ruang Lingkup & Asumsi
+
+PRD ini mencakup API untuk sisi pengguna aplikasi mobile. Panel admin atau CMS untuk mengelola konten, fitur AI Topeng Malang Vision Recognition (masih rencana di PRD frontend), dan pembayaran online tidak termasuk.
+
+PRD frontend V2 belum mengikuti beberapa perubahan terbaru. Tabel ini mencatat selisihnya dan dampaknya ke backend.
+
+| Hal | PRD frontend V2 | Fitur terbaru | Dampak ke backend |
+| --- | --- | --- | --- |
+| Daftar halaman | 7 halaman | Ditambah artikel, jelajah Polowijen, rating, ulasan, wishlist, jadwal rutin, dan halaman detail (UMKM, paket, jadwal, event) | Setiap modul punya endpoint daftar dan detail |
+| Bottom navigation | Rute /main menyebut 5 tab, tetapi diagram hanya menggambar 4 | 5 tab: Home, UMKM, Paket Kunjungan, Event, Profile | Home butuh endpoint ringkasan konten |
+| Profil | Edit profil, riwayat, bantuan, logout | Foto, nama, email, ubah password, konfirmasi password, logout | Upload foto dan endpoint ubah password |
+| Sesi login | Disimpan di shared_preferences | Perlu akun di server | Token autentikasi dan endpoint logout |
+| Reservasi paket | Form pemesanan: nama, WhatsApp, jumlah peserta | Tidak disebut di daftar fitur | Perlu konfirmasi; disiapkan sebagai modul opsional |
+
+**Asumsi yang dipakai:**
+
+- API berbentuk REST dengan JSON, dan autentikasi memakai bearer token.
+- Konten (artikel, UMKM, paket, jadwal, event) diisi lewat admin atau seeder, jadi API mobile hanya membaca konten tersebut.
+- Pengguna yang belum login boleh membaca konten; menulis ulasan, rating, dan wishlist butuh login.
+- Database relasional. Harga disimpan sebagai bilangan bulat Rupiah dan diformat Rp oleh aplikasi (paket intl).
+- Stack backend belum ditentukan, jadi PRD ini tidak bergantung pada framework tertentu.
+
+## Aktor & Hak Akses
+
+Ada dua aktor: tamu (belum login) yang hanya membaca konten, dan user (sudah login) yang juga boleh menulis dan mengelola datanya sendiri.
+
+| Aksi | Tamu | User login |
+| --- | --- | --- |
+| Register dan login | Ya | Tidak perlu |
+| Baca artikel, jelajah Polowijen, UMKM, paket, jadwal rutin, event | Ya | Tidak perlu |
+| Baca rating dan ulasan | Ya | Ya |
+| Beri, ubah, dan hapus rating dan ulasan milik sendiri | Tidak | Ya |
+| Tambah dan hapus wishlist UMKM | Tidak | Ya |
+| Lihat profil, ubah foto dan nama, ubah password, logout | Tidak | Ya |
+| paket kunjungan (opsional) | Tidak | Ya |
+
+User hanya boleh mengubah data miliknya sendiri; server menolak akses ke data user lain dengan kode 403.
+## Kebutuhan Fungsional
+
+Bagian ini memuat aturan bisnis dan validasi per modul yang harus dipenuhi backend. Bentuk endpoint ada di bagian Daftar Endpoint.
+
+### Autentikasi
+
+- Register: menerima nama, email, password, dan konfirmasi password. Email harus unik, password minimal 6 karakter (sama dengan validator di PRD frontend), dan konfirmasi harus sama dengan password.
+- Login: menerima email dan password, mengembalikan token dan data user. PRD frontend menulis "Email/Username"; PRD ini mengasumsikan email.
+- Logout: mencabut token yang sedang dipakai, sehingga token itu tidak bisa dipakai lagi.
+- Password disimpan dalam bentuk hash, tidak pernah dikirim kembali di respons.
+- Error validasi dikembalikan per field supaya Flutter bisa menampilkannya di tiap TextFormField.
+
+### Profil
+
+- Menampilkan foto, nama, dan email user yang login.
+- Mengubah nama dan foto. Foto berupa gambar JPG atau PNG dengan batas ukuran yang ditetapkan server.
+- Email hanya ditampilkan; daftar fitur tidak menyebut perubahan email.
+- Ubah password: wajib mengirim password lama, password baru, dan konfirmasi password baru. Password lama yang salah atau konfirmasi yang tidak cocok ditolak dengan pesan per field.
+
+### Home
+
+- Satu endpoint ringkasan untuk tab Home: banner, artikel terbaru, ringkasan rating, produk UMKM pilihan, dan event mendatang.
+- Pencarian di Home memakai parameter q pada daftar artikel dan daftar UMKM.
+
+### Artikel
+
+- Daftar artikel berpaginasi, terbaru lebih dulu, berisi judul, gambar sampul, ringkasan, dan tanggal terbit.
+- Detail artikel berisi judul, gambar sampul, isi lengkap, dan tanggal terbit.
+
+### Rating dan Ulasan Pengunjung
+
+- Ringkasan menampilkan rata-rata rating (satu desimal) dan jumlah ulasan.
+- Daftar ulasan berpaginasi, terbaru lebih dulu, memuat rating, teks, tanggal, serta nama dan foto pengunjung.
+- User login boleh memberi satu rating dan ulasan per target; rating wajib berupa bilangan bulat 1 sampai 5.
+- User boleh mengubah atau menghapus ulasan miliknya, tidak milik orang lain.
+- Asumsi: rating dan ulasan berlaku untuk Kampung Budaya Polowijen secara keseluruhan. Lihat pertanyaan terbuka.
+
+### Jelajah Polowijen
+
+- Daftar objek atau titik yang bisa dijelajahi di Kampung Budaya Polowijen, masing-masing dengan nama, gambar, dan deskripsi singkat.
+- Detail objek berisi deskripsi lengkap, galeri gambar, dan koordinat lokasi bila ada.
+- Isi dan struktur halaman ini belum dijelaskan di PRD frontend, jadi bentuk datanya masih asumsi. Lihat pertanyaan terbuka.
+
+### UMKM, Deskripsi Produk, dan Wishlist
+
+- Daftar produk berpaginasi dengan nama, gambar, harga, dan kategori. Bisa difilter per kategori (Topeng, Batik, Kerajinan sesuai PRD) dan dicari dengan q.
+- Detail produk berisi deskripsi lengkap, harga, galeri gambar, nama pengrajin, dan nomor WhatsApp pengrajin untuk tombol "Hubungi Pengrajin" (url_launcher).
+- Wishlist: user login bisa menambah dan menghapus produk dari wishlist. Menambah produk yang sudah ada di wishlist, atau menghapus yang tidak ada, tidak menimbulkan error.
+- Daftar dan detail produk menyertakan is_wishlisted untuk user login, supaya ikon favorit langsung tampil benar.
+- User bisa melihat daftar wishlist miliknya.
+
+### Paket Kunjungan
+
+- Daftar paket berisi nama, gambar, harga, dan durasi.
+- Detail paket berisi deskripsi, daftar fasilitas, harga, dan durasi.
+- Reservasi (opsional, perlu konfirmasi): PRD frontend punya form pemesanan, tetapi daftar fitur terbaru tidak menyebutnya. Jika dipakai, validasinya mengikuti PRD frontend: nama pemesan wajib, nomor WhatsApp minimal 10 digit, jumlah peserta minimal 1.
+
+### Jadwal Rutin
+
+- Daftar kegiatan yang berulang secara berkala: nama kegiatan, hari, jam mulai dan selesai.
+- Detail kegiatan berisi deskripsi, lokasi, dan jadwal lengkapnya.
+- Aturan pengulangan (mingguan atau lainnya) belum didefinisikan. Lihat pertanyaan terbuka.
+
+### Event
+
+- Daftar event berpaginasi dengan nama, tanggal, lokasi, dan gambar, diurutkan dari tanggal terdekat. Parameter status memisahkan event mendatang dan yang sudah lewat.
+- Detail event berisi deskripsi, tanggal, lokasi, dan tautan Google Maps atau koordinat untuk tombol "Petunjuk Lokasi Event".
+
+## Model Data
+
+Model data terdiri dari 15 entitas. Rata-rata rating dan jumlah ulasan dihitung dari tabel reviews, tidak disimpan terpisah. Nama dan tipe kolom final ditentukan saat stack dipilih.
+
+| Entitas | Field utama | Relasi |
+| --- | --- | --- |
+| users | id, name, email (unik), password_hash, photo_url, created_at | Punya banyak reviews, wishlists, bookings, auth_tokens |
+| auth_tokens | id, user_id, token_hash, expires_at, revoked_at | Milik satu users |
+| banners | id, image_url, title, sort_order, is_active | Berdiri sendiri, tampil di Home |
+| articles | id, title, cover_url, summary, body, published_at | Berdiri sendiri |
+| reviews | id, user_id, rating (1 sampai 5), comment, created_at, updated_at | Milik satu users; satu ulasan per user per target |
+| explore_places | id, name, description, cover_url, latitude, longitude | Punya banyak images |
+| images | id, owner_type, owner_id, url, sort_order | Galeri untuk explore_places dan umkm_products |
+| umkm_categories | id, name | Punya banyak umkm_products |
+| umkm_products | id, category_id, name, description, price (Rupiah, bilangan bulat), cover_url, craftsman_name, whatsapp_number | Milik satu umkm_categories; punya banyak images dan wishlists |
+| wishlists | user_id, product_id, created_at | Menghubungkan users dan umkm_products; pasangan unik |
+| packages | id, name, description, price, duration_minutes, cover_url | Punya banyak package_facilities dan bookings |
+| package_facilities | id, package_id, name | Milik satu packages |
+| bookings (opsional) | id, user_id, package_id, customer_name, whatsapp_number, participants, visit_date, status, created_at | Milik satu users dan satu packages |
+| schedules | id, title, description, location, day_of_week, start_time, end_time | Berdiri sendiri |
+| events | id, title, description, location, latitude, longitude, maps_url, start_at, end_at, cover_url | Berdiri sendiri |
+
+## Daftar Endpoint API
+
+Semua endpoint berada di bawah /api/v1. Kolom Akses: Publik tanpa token, Opsional boleh tanpa token tetapi memberi data tambahan jika ada token (misalnya is_wishlisted), Login wajib token.
+
+| Modul | Method | Path | Akses | Fungsi |
+| --- | --- | --- | --- | --- |
+| Auth | POST | `/auth/register` | Publik | Daftar akun baru |
+| Auth | POST | `/auth/login` | Publik | Masuk, mengembalikan token dan data user |
+| Auth | POST | `/auth/logout` | Login | Mencabut token yang sedang dipakai |
+| Profil | GET | `/profile` | Login | Foto, nama, email user |
+| Profil | PATCH | `/profile` | Login | Ubah nama dan foto (multipart) |
+| Profil | PUT | `/profile/password` | Login | Ubah password: lama, baru, konfirmasi |
+| Home | GET | `/home` | Publik | Banner, artikel terbaru, ringkasan rating, UMKM pilihan, event mendatang |
+| Artikel | GET | `/articles` | Publik | Daftar artikel (page, q) |
+| Artikel | GET | `/articles/{id}` | Publik | Detail artikel |
+| Ulasan | GET | `/reviews/summary` | Login | Rata-rata rating dan jumlah ulasan |
+| Ulasan | GET | `/reviews` | Login | Daftar ulasan (page) |
+| Ulasan | POST | `/reviews` | Login | Kirim rating dan ulasan |
+| Ulasan | PUT | `/reviews/{id}` | Login | Ubah ulasan milik sendiri |
+| Ulasan | DELETE | `/reviews/{id}` | Login | Hapus ulasan milik sendiri |
+| Jelajah | GET | `/explore` | Publik | Daftar objek Polowijen |
+| Jelajah | GET | `/explore/{id}` | Publik | Detail objek |
+| UMKM | GET | `/umkm/categories` | Publik | Daftar kategori untuk chip filter |
+| UMKM | GET | `/umkm` | Publik | Daftar produk (category, q, page) |
+| UMKM | GET | `/umkm/{id}` | Publik | Detail produk dan kontak pengrajin |
+| Wishlist | GET | `/wishlist` | Login | Daftar wishlist user |
+| Wishlist | PUT | `/umkm/{id}/wishlist` | Login | Tambah ke wishlist (idempoten) |
+| Wishlist | DELETE | `/umkm/{id}/wishlist` | Login | Hapus dari wishlist (idempoten) |
+| Paket | GET | `/packages` | Publik | Daftar paket kunjungan |
+| Paket | GET | `/packages/{id}` | Publik | Detail paket |
+| Reservasi (opsional) | POST | `/bookings` | Login | Buat reservasi paket |
+| Reservasi (opsional) | GET | `/bookings` | Login | Riwayat reservasi user |
+| Jadwal | GET | `/schedules` | Publik | Daftar jadwal rutin |
+| Jadwal | GET | `/schedules/{id}` | Publik | Detail jadwal rutin |
+| Event | GET | `/events` | Publik | Daftar event (status, page) |
+| Event | GET | `/events/{id}` | Publik | Detail event |
+
+## Konvensi API dan Penanganan Error
+
+Semua respons berupa JSON dengan bentuk yang sama, supaya aplikasi Flutter cukup punya satu parser untuk sukses dan satu untuk error.
+
+- Autentikasi: header `Authorization: Bearer <token>`.
+- Respons sukses: `{ "data": ... }`. Untuk daftar ditambah `"meta": { "page", "per_page", "total" }`.
+- Respons error: `{ "message": "...", "errors": { "nama_field": ["pesan"] } }`; errors hanya ada pada error validasi.
+- Paginasi: parameter page dan per_page, dengan nilai bawaan 10 dan maksimum 50.
+- Tanggal dan waktu: format ISO 8601. Jadwal dan event memakai zona WIB (UTC+7).
+- Gambar: URL absolut yang bisa langsung dimuat aplikasi.
+- Versi: perubahan yang merusak kompatibilitas masuk ke `/api/v2`, karena pengguna mobile sering belum memperbarui aplikasinya.
+
+| Kode | Kapan dipakai | Yang dilakukan aplikasi |
+| --- | --- | --- |
+| 200 | Permintaan berhasil | Menampilkan data |
+| 201 | Data baru dibuat (register, ulasan, reservasi) | Menampilkan notifikasi sukses |
+| 401 | Token tidak ada, salah, atau kedaluwarsa | Menghapus sesi lokal dan membuka `/login` |
+| 403 | Mengakses data milik user lain | Menampilkan pesan akses ditolak |
+| 404 | Data tidak ditemukan | Menampilkan pesan tidak ditemukan |
+| 422 | Validasi gagal | Menampilkan pesan di tiap field |
+| 429 | Terlalu banyak percobaan (misalnya login) | Meminta user menunggu |
+| 500 | Kesalahan server | Menampilkan pesan umum dan tombol coba lagi |
+
+## Kebutuhan Non-Fungsional
+
+Angka di bawah adalah target awal yang bisa disesuaikan setelah ada data pemakaian nyata.
+
+- Keamanan: semua trafik lewat HTTPS; password di-hash dengan algoritma yang dirancang untuk password (bcrypt atau argon2); login dibatasi percobaannya (kode 429); user hanya bisa mengubah data miliknya; semua input divalidasi di server, tidak hanya di Flutter.
+- Performa: daftar dan detail menjawab di bawah 500 ms pada beban normal; semua daftar berpaginasi; kolom yang dipakai untuk filter, pencarian, dan relasi diberi indeks.
+- Penyimpanan media: foto profil dan gambar konten disimpan di penyimpanan file atau object storage, database hanya menyimpan URL-nya. Upload dibatasi pada JPG dan PNG, maksimum 2 MB per foto profil.
+- Keandalan: backup database berkala dan log error server, supaya masalah di aplikasi bisa dilacak.
+- Kompatibilitas: versi API di path (/v1); endpoint lama tetap berjalan selama masih ada aplikasi yang memakainya.
+
+## Kriteria Penerimaan dan Pengujian
+
+Backend dianggap siap jika semua endpoint di tabel terpenuhi, seluruh skenario di bawah lulus, dan kelima tab aplikasi Flutter berjalan dengan data dari API, bukan data contoh.
+
+| ID | Modul | Skenario | Hasil yang diharapkan |
+| --- | --- | --- | --- |
+| TC-B01 | Register | Data valid | 201, akun dibuat, password tidak ada di respons |
+| TC-B02 | Register | Email sudah dipakai, password kurang dari 6 karakter, atau konfirmasi berbeda | 422 dengan pesan di field yang salah |
+| TC-B03 | Login | Email dan password benar; lalu salah | 200 dengan token; 401 untuk kredensial salah |
+| TC-B04 | Logout | Memakai token lama setelah logout | 401 |
+| TC-B05 | Profil | Membuka `/profile` tanpa token | 401 |
+| TC-B06 | Ubah password | Password lama salah; konfirmasi berbeda; data benar | 422; 422; 200 dan login dengan password baru berhasil |
+| TC-B07 | Foto profil | Mengunggah file non-gambar atau lebih dari 2 MB; lalu JPG valid | 422; foto tersimpan dan URL baru dikembalikan |
+| TC-B08 | Artikel | Daftar dengan page dan q | Hasil berpaginasi dan sesuai kata kunci |
+| TC-B09 | Ulasan | Rating 0 atau 6; lalu rating 4 | 422; 201 dan rata-rata rating ikut berubah |
+| TC-B10 | Ulasan | Mengubah atau menghapus ulasan milik user lain | 403 |
+| TC-B11 | UMKM | Filter kategori, dengan dan tanpa token | Hanya produk kategori itu; is_wishlisted benar bila login |
+| TC-B12 | Wishlist | Menambah produk yang sama dua kali; menghapus yang tidak ada | Tetap satu entri; tidak ada error |
+| TC-B13 | Event | `status=upcoming` | Hanya event mendatang, tanggal terdekat di atas |
+| TC-B14 | Detail | Membuka detail dengan id yang tidak ada | 404 |
+| TC-B15 | Reservasi (opsional) | WhatsApp kurang dari 10 digit; peserta 0; data valid | 422; 422; 201 |
+

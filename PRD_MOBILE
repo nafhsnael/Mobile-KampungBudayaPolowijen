@@ -50,7 +50,7 @@ Aplikasi menggunakan gabungan Named Routes untuk autentikasi/detail serta Bottom
 └──────┬──────┴──────┬──────┴────────┬────────┴─────┬──────┘
        │             │               │              │
        ▼             ▼               ▼              ▼
-  [Profile Page]  [Detail]     [Form Booking]  [Detail Event]
+  [Dashboard Page]  [Detail]     [menampilkan informasi paket]  [Detail Event]
 
 
 Rincian Rute (Routes Definition)
@@ -99,7 +99,7 @@ Interaksi: Klik card rekomendasi mengarah ke Halaman Detail atau ke Tab terkait.
 Plugin: google_fonts untuk tipografi UI, intl untuk format nominal harga.
 4.3 UMKM Page
 UI Components: GridView.builder produk lokal (Topeng, Batik, Kerajinan), Chip filter kategori.
-Interaksi & Plugin: Tombol "Beli / Hubungi Pengrajin" mengintegrasikan url_launcher untuk membuka WhatsApp pengrajin.
+Interaksi & Plugin: Tombol "Hubungi Pengrajin" mengintegrasikan url_launcher untuk membuka WhatsApp pengrajin.
 4.4 Paket Kunjungan Page
 UI Components: Card Paket Wisata (Harga, Durasi, Fasilitas), Button "Pesan Paket".
 Validation Form Pemesanan:

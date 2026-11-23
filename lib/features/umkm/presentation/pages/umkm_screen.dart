@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/utils/url_helper.dart';
 import '../../domain/entities/umkm_product.dart';
@@ -27,8 +28,7 @@ class _UmkmScreenState extends State<UmkmScreen> {
       price: 350000,
       category: 'Kerajinan',
       whatsappNumber: _artisanWhatsAppNumber,
-      imageUrl:
-          'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=800&q=80',
+      imageUrl: 'assets/images/images.png',
     ),
     UmkmProduct(
       name: 'Topeng Malang Dewi Sekartaji',
@@ -36,8 +36,7 @@ class _UmkmScreenState extends State<UmkmScreen> {
       price: 375000,
       category: 'Kerajinan',
       whatsappNumber: _artisanWhatsAppNumber,
-      imageUrl:
-          'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=800&q=80',
+      imageUrl: 'assets/images/topeng.jpg',
     ),
     UmkmProduct(
       name: 'Topeng Bapang Malang',
@@ -45,8 +44,7 @@ class _UmkmScreenState extends State<UmkmScreen> {
       price: 325000,
       category: 'Kerajinan',
       whatsappNumber: _artisanWhatsAppNumber,
-      imageUrl:
-          'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80',
+      imageUrl: 'assets/images/taritopeng.png',
     ),
     UmkmProduct(
       name: 'Kain Batik Tulis Motif Topeng Polowijen',
@@ -54,8 +52,7 @@ class _UmkmScreenState extends State<UmkmScreen> {
       price: 450000,
       category: 'Batik',
       whatsappNumber: _artisanWhatsAppNumber,
-      imageUrl:
-          'https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&w=800&q=80',
+      imageUrl: 'assets/images/mbatik.png',
     ),
     UmkmProduct(
       name: 'Kaos Souvenir Kampung Topeng Polowijen',
@@ -63,8 +60,7 @@ class _UmkmScreenState extends State<UmkmScreen> {
       price: 95000,
       category: 'Souvenir',
       whatsappNumber: _artisanWhatsAppNumber,
-      imageUrl:
-          'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=800&q=80',
+      imageUrl: 'assets/images/festivalkampung.jpeg',
     ),
     UmkmProduct(
       name: 'Gantungan Kunci Miniatur Topeng Malang',
@@ -72,8 +68,7 @@ class _UmkmScreenState extends State<UmkmScreen> {
       price: 25000,
       category: 'Souvenir',
       whatsappNumber: _artisanWhatsAppNumber,
-      imageUrl:
-          'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80',
+      imageUrl: 'assets/images/images.png',
     ),
     UmkmProduct(
       name: 'Miniatur Patung Penari Topeng',
@@ -81,8 +76,7 @@ class _UmkmScreenState extends State<UmkmScreen> {
       price: 185000,
       category: 'Kerajinan',
       whatsappNumber: _artisanWhatsAppNumber,
-      imageUrl:
-          'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&w=800&q=80',
+      imageUrl: 'assets/images/taritopeng.png',
     ),
     UmkmProduct(
       name: 'Selendang Batik Khas Polowijen',
@@ -90,8 +84,7 @@ class _UmkmScreenState extends State<UmkmScreen> {
       price: 175000,
       category: 'Batik',
       whatsappNumber: _artisanWhatsAppNumber,
-      imageUrl:
-          'https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&w=800&q=80',
+      imageUrl: 'assets/images/mbatik.png',
     ),
     UmkmProduct(
       name: 'Tas Anyam',
@@ -99,8 +92,7 @@ class _UmkmScreenState extends State<UmkmScreen> {
       price: 145000,
       category: 'Kerajinan',
       whatsappNumber: _artisanWhatsAppNumber,
-      imageUrl:
-          'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80',
+      imageUrl: 'assets/images/masak.webp',
     ),
     UmkmProduct(
       name: 'Kipas Lukis Motif Topeng',
@@ -108,11 +100,11 @@ class _UmkmScreenState extends State<UmkmScreen> {
       price: 65000,
       category: 'Souvenir',
       whatsappNumber: _artisanWhatsAppNumber,
-      imageUrl:
-          'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=800&q=80',
+      imageUrl: 'assets/images/images.png',
     ),
   ];
 
+  static const _wishlistKey = 'umkmWishlist';
   static const _categories = <_ProductCategory>[
     _ProductCategory(name: 'Kerajinan', icon: Icons.backpack_outlined),
     _ProductCategory(name: 'Batik', icon: Icons.checkroom_outlined),
@@ -124,6 +116,13 @@ class _UmkmScreenState extends State<UmkmScreen> {
   String _query = '';
   String? _selectedCategory;
   bool _showAllProducts = false;
+  bool _showWishlist = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFavorites();
+  }
 
   List<UmkmProduct> get _filteredProducts {
     return _products.where((product) {
@@ -144,12 +143,46 @@ class _UmkmScreenState extends State<UmkmScreen> {
     super.dispose();
   }
 
-  void _toggleFavorite(UmkmProduct product) {
+  Future<void> _loadFavorites() async {
+    final preferences = await SharedPreferences.getInstance();
+    final savedNames = preferences.getStringList(_wishlistKey) ?? const [];
+    if (!mounted) return;
     setState(() {
-      if (!_favorites.add(product.name)) {
+      _favorites.addAll(
+        savedNames.where(
+          (name) => _products.any((product) => product.name == name),
+        ),
+      );
+    });
+  }
+
+  Future<void> _toggleFavorite(UmkmProduct product) async {
+    final wasFavorite = _favorites.contains(product.name);
+    setState(() {
+      if (wasFavorite) {
         _favorites.remove(product.name);
+      } else {
+        _favorites.add(product.name);
       }
     });
+
+    final preferences = await SharedPreferences.getInstance();
+    final saved = await preferences.setStringList(
+      _wishlistKey,
+      _favorites.toList(),
+    );
+    if (!saved && mounted) {
+      setState(() {
+        if (wasFavorite) {
+          _favorites.add(product.name);
+        } else {
+          _favorites.remove(product.name);
+        }
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Wishlist gagal disimpan.')),
+      );
+    }
   }
 
   Future<void> _buyViaWhatsApp(UmkmProduct product) async {
@@ -252,247 +285,282 @@ class _UmkmScreenState extends State<UmkmScreen> {
   @override
   Widget build(BuildContext context) {
     final products = _filteredProducts;
+    final favoriteProducts = _products
+        .where((product) => _favorites.contains(product.name))
+        .toList();
 
     return Scaffold(
       backgroundColor: _cream,
       body: SafeArea(
         bottom: false,
-        child: CustomScrollView(
-          slivers: [
-            SliverPadding(
-              padding: EdgeInsets.fromLTRB(
-                20,
-                _showAllProducts ? 8 : MediaQuery.sizeOf(context).height * 0.2,
-                20,
-                12,
-              ),
-              sliver: SliverToBoxAdapter(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (_showAllProducts)
-                      IconButton(
-                        tooltip: 'Kembali ke produk unggulan',
-                        alignment: Alignment.centerLeft,
-                        padding: EdgeInsets.zero,
-                        visualDensity: VisualDensity.compact,
-                        onPressed: () {
-                          _searchController.clear();
-                          setState(() {
-                            _showAllProducts = false;
-                            _selectedCategory = null;
-                            _query = '';
-                          });
-                        },
-                        icon: const Icon(
-                          Icons.arrow_back_ios_new,
-                          size: 16,
-                          color: _brown,
-                        ),
-                      ),
-                    const Text(
-                      'Dukung UMKM Lokal',
-                      style: TextStyle(
-                        color: _brown,
-                        fontSize: 21,
-                        fontWeight: FontWeight.w700,
-                        height: 1.3,
-                      ),
+        child: _showWishlist
+            ? _WishlistScreen(
+                products: favoriteProducts,
+                onBack: () => setState(() => _showWishlist = false),
+                onFavoriteTap: _toggleFavorite,
+                onProductTap: _showProduct,
+              )
+            : CustomScrollView(
+                slivers: [
+                  SliverPadding(
+                    padding: EdgeInsets.fromLTRB(
+                      20,
+                      _showAllProducts
+                          ? 8
+                          : MediaQuery.sizeOf(context).height * 0.2,
+                      20,
+                      12,
                     ),
-                    const SizedBox(height: 2),
-                    const Text(
-                      'Di Kampung Budaya Polowijen',
-                      style: TextStyle(
-                        color: _brown,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      'Jelajahi produk unggulan dari pelaku UMKM budaya Kampung Budaya Polowijen. Setiap pembelianmu, ikut melestarikan budaya dan memberdayakan masyarakat.',
-                      style: TextStyle(
-                        color: Color(0xFF625950),
-                        fontSize: 11,
-                        height: 1.45,
-                      ),
-                    ),
-                    const SizedBox(height: 14),
-                    TextField(
-                      controller: _searchController,
-                      onChanged: (value) {
-                        setState(() {
-                          _query = value;
-                          if (value.isNotEmpty) {
-                            _showAllProducts = true;
-                          }
-                        });
-                      },
-                      style: const TextStyle(fontSize: 12, color: _brown),
-                      decoration: InputDecoration(
-                        hintText: 'Cari produk, UMKM, atau kategori...',
-                        hintStyle: const TextStyle(
-                          color: Color(0xFFAAA198),
-                          fontSize: 10,
-                        ),
-                        prefixIcon: const Icon(
-                          Icons.search,
-                          size: 17,
-                          color: Color(0xFFAAA198),
-                        ),
-                        suffixIcon: _query.isEmpty
-                            ? null
-                            : IconButton(
-                                tooltip: 'Hapus pencarian',
-                                onPressed: () {
-                                  _searchController.clear();
-                                  setState(() {
-                                    _query = '';
-                                    _selectedCategory = null;
-                                  });
-                                },
-                                icon: const Icon(Icons.close, size: 17),
-                              ),
-                        filled: true,
-                        fillColor: Colors.white,
-                        isDense: true,
-                        contentPadding:
-                            const EdgeInsets.symmetric(vertical: 11),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                    ),
-                    if (!_showAllProducts) ...[
-                      const SizedBox(height: 14),
-                      Row(
+                    sliver: SliverToBoxAdapter(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          for (var index = 0;
-                              index < _categories.length;
-                              index++) ...[
-                            Expanded(
-                              child: _CategoryButton(
-                                category: _categories[index],
-                                selected: _selectedCategory ==
-                                    _categories[index].name,
-                                onTap: () {
-                                  setState(() {
-                                    _selectedCategory = _selectedCategory ==
-                                            _categories[index].name
-                                        ? null
-                                        : _categories[index].name;
-                                    if (_selectedCategory != null) {
-                                      _showAllProducts = true;
-                                    }
-                                  });
-                                },
+                          if (_showAllProducts)
+                            IconButton(
+                              tooltip: 'Kembali ke produk unggulan',
+                              alignment: Alignment.centerLeft,
+                              padding: EdgeInsets.zero,
+                              visualDensity: VisualDensity.compact,
+                              onPressed: () {
+                                _searchController.clear();
+                                setState(() {
+                                  _showAllProducts = false;
+                                  _selectedCategory = null;
+                                  _query = '';
+                                });
+                              },
+                              icon: const Icon(
+                                Icons.arrow_back_ios_new,
+                                size: 16,
+                                color: _brown,
                               ),
                             ),
-                            if (index != _categories.length - 1)
-                              const SizedBox(width: 10),
+                          Row(
+                            children: [
+                              const Expanded(
+                                child: Text(
+                                  'Dukung UMKM Lokal',
+                                  style: TextStyle(
+                                    color: _brown,
+                                    fontSize: 21,
+                                    fontWeight: FontWeight.w700,
+                                    height: 1.3,
+                                  ),
+                                ),
+                              ),
+                              IconButton(
+                                tooltip: 'Buka wishlist',
+                                visualDensity: VisualDensity.compact,
+                                onPressed: () =>
+                                    setState(() => _showWishlist = true),
+                                icon: Badge(
+                                  isLabelVisible: _favorites.isNotEmpty,
+                                  label: Text('${_favorites.length}'),
+                                  child: const Icon(
+                                    Icons.favorite_border,
+                                    color: _brown,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 2),
+                          const Text(
+                            'Di Kampung Budaya Polowijen',
+                            style: TextStyle(
+                              color: _brown,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          const Text(
+                            'Jelajahi produk unggulan dari pelaku UMKM budaya Kampung Budaya Polowijen. Setiap pembelianmu, ikut melestarikan budaya dan memberdayakan masyarakat.',
+                            style: TextStyle(
+                              color: Color(0xFF625950),
+                              fontSize: 11,
+                              height: 1.45,
+                            ),
+                          ),
+                          const SizedBox(height: 14),
+                          TextField(
+                            controller: _searchController,
+                            onChanged: (value) {
+                              setState(() {
+                                _query = value;
+                                if (value.isNotEmpty) {
+                                  _showAllProducts = true;
+                                }
+                              });
+                            },
+                            style: const TextStyle(fontSize: 12, color: _brown),
+                            decoration: InputDecoration(
+                              hintText: 'Cari produk, UMKM, atau kategori...',
+                              hintStyle: const TextStyle(
+                                color: Color(0xFFAAA198),
+                                fontSize: 10,
+                              ),
+                              prefixIcon: const Icon(
+                                Icons.search,
+                                size: 17,
+                                color: Color(0xFFAAA198),
+                              ),
+                              suffixIcon: _query.isEmpty
+                                  ? null
+                                  : IconButton(
+                                      tooltip: 'Hapus pencarian',
+                                      onPressed: () {
+                                        _searchController.clear();
+                                        setState(() {
+                                          _query = '';
+                                          _selectedCategory = null;
+                                        });
+                                      },
+                                      icon: const Icon(Icons.close, size: 17),
+                                    ),
+                              filled: true,
+                              fillColor: Colors.white,
+                              isDense: true,
+                              contentPadding:
+                                  const EdgeInsets.symmetric(vertical: 11),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
+                          ),
+                          if (!_showAllProducts) ...[
+                            const SizedBox(height: 14),
+                            Row(
+                              children: [
+                                for (var index = 0;
+                                    index < _categories.length;
+                                    index++) ...[
+                                  Expanded(
+                                    child: _CategoryButton(
+                                      category: _categories[index],
+                                      selected: _selectedCategory ==
+                                          _categories[index].name,
+                                      onTap: () {
+                                        setState(() {
+                                          _selectedCategory =
+                                              _selectedCategory ==
+                                                      _categories[index].name
+                                                  ? null
+                                                  : _categories[index].name;
+                                          if (_selectedCategory != null) {
+                                            _showAllProducts = true;
+                                          }
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                  if (index != _categories.length - 1)
+                                    const SizedBox(width: 10),
+                                ],
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    _showAllProducts
+                                        ? 'Semua produk'
+                                        : 'Produk unggulan',
+                                    style: const TextStyle(
+                                      color: _brown,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                                if (!_showAllProducts)
+                                  IconButton(
+                                    tooltip: 'Lihat semua produk',
+                                    visualDensity: VisualDensity.compact,
+                                    onPressed: () {
+                                      setState(() => _showAllProducts = true);
+                                    },
+                                    icon: const Icon(
+                                      Icons.chevron_right,
+                                      size: 20,
+                                      color: Color(0xFF786B60),
+                                    ),
+                                  ),
+                              ],
+                            ),
                           ],
                         ],
                       ),
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              _showAllProducts
-                                  ? 'Semua produk'
-                                  : 'Produk unggulan',
-                              style: const TextStyle(
-                                color: _brown,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                          if (!_showAllProducts)
-                            IconButton(
-                              tooltip: 'Lihat semua produk',
-                              visualDensity: VisualDensity.compact,
-                              onPressed: () {
-                                setState(() => _showAllProducts = true);
-                              },
-                              icon: const Icon(
-                                Icons.chevron_right,
-                                size: 20,
-                                color: Color(0xFF786B60),
-                              ),
-                            ),
-                        ],
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-            ),
-            if (!_showAllProducts)
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final product = _products[index];
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 9),
-                        child: SizedBox(
-                          height: 118,
-                          child: _FeaturedProductCard(
-                            product: product,
-                            isFavorite: _favorites.contains(product.name),
-                            onFavoriteTap: () => _toggleFavorite(product),
-                            onTap: () => _showProduct(product),
-                            onBuyTap: () => _buyViaWhatsApp(product),
-                          ),
-                        ),
-                      );
-                    },
-                    childCount: _products.take(2).length,
+                    ),
                   ),
-                ),
-              ),
-            if (_showAllProducts)
-              SliverPadding(
-                padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
-                sliver: products.isEmpty
-                    ? const SliverToBoxAdapter(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 28),
-                          child: Center(
-                            child: Text('Produk tidak ditemukan.'),
-                          ),
-                        ),
-                      )
-                    : SliverToBoxAdapter(
-                        child: GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 12,
-                            mainAxisSpacing: 12,
-                            mainAxisExtent: 302,
-                          ),
-                          itemCount: products.length,
-                          itemBuilder: (context, index) {
-                            final product = products[index];
-                            return _CatalogProductCard(
-                              product: product,
-                              isFavorite: _favorites.contains(product.name),
-                              onFavoriteTap: () => _toggleFavorite(product),
-                              onTap: () => _showProduct(product),
-                              onBuyTap: () => _buyViaWhatsApp(product),
+                  if (!_showAllProducts)
+                    SliverPadding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      sliver: SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            final product = _products[index];
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 9),
+                              child: SizedBox(
+                                height: 118,
+                                child: _FeaturedProductCard(
+                                  product: product,
+                                  isFavorite: _favorites.contains(product.name),
+                                  onFavoriteTap: () => _toggleFavorite(product),
+                                  onTap: () => _showProduct(product),
+                                  onBuyTap: () => _buyViaWhatsApp(product),
+                                ),
+                              ),
                             );
                           },
+                          childCount: _products.take(2).length,
                         ),
                       ),
+                    ),
+                  if (_showAllProducts)
+                    SliverPadding(
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
+                      sliver: products.isEmpty
+                          ? const SliverToBoxAdapter(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 28),
+                                child: Center(
+                                  child: Text('Produk tidak ditemukan.'),
+                                ),
+                              ),
+                            )
+                          : SliverToBoxAdapter(
+                              child: GridView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 12,
+                                  mainAxisSpacing: 12,
+                                  mainAxisExtent: 302,
+                                ),
+                                itemCount: products.length,
+                                itemBuilder: (context, index) {
+                                  final product = products[index];
+                                  return _CatalogProductCard(
+                                    product: product,
+                                    isFavorite:
+                                        _favorites.contains(product.name),
+                                    onFavoriteTap: () =>
+                                        _toggleFavorite(product),
+                                    onTap: () => _showProduct(product),
+                                    onBuyTap: () => _buyViaWhatsApp(product),
+                                  );
+                                },
+                              ),
+                            ),
+                    ),
+                ],
               ),
-          ],
-        ),
       ),
     );
   }
@@ -811,18 +879,27 @@ class _ProductImage extends StatelessWidget {
                 ? _imagePlaceholder
                 : ClipRRect(
                     borderRadius: borderRadius,
-                    child: Image.network(
-                      product.imageUrl!,
-                      width: double.infinity,
-                      height: height,
-                      fit: BoxFit.cover,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return _imagePlaceholder;
-                      },
-                      errorBuilder: (context, error, stackTrace) =>
-                          _imagePlaceholder,
-                    ),
+                    child: product.imageUrl!.startsWith('assets/')
+                        ? Image.asset(
+                            product.imageUrl!,
+                            width: double.infinity,
+                            height: height,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                _imagePlaceholder,
+                          )
+                        : Image.network(
+                            product.imageUrl!,
+                            width: double.infinity,
+                            height: height,
+                            fit: BoxFit.cover,
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return _imagePlaceholder;
+                            },
+                            errorBuilder: (context, error, stackTrace) =>
+                                _imagePlaceholder,
+                          ),
                   ),
           ),
           if (badge != null)
@@ -853,18 +930,268 @@ class _FavoriteButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: const Color(0xFF70463A),
-      shape: const CircleBorder(),
+    return Tooltip(
+      message: selected ? 'Hapus dari wishlist' : 'Simpan ke wishlist',
+      child: Material(
+        color: const Color(0xFF70463A),
+        shape: const CircleBorder(),
+        child: InkWell(
+          onTap: onTap,
+          customBorder: const CircleBorder(),
+          child: Padding(
+            padding: const EdgeInsets.all(4),
+            child: Icon(
+              selected ? Icons.favorite : Icons.favorite_border,
+              size: 13,
+              color: selected ? const Color(0xFFEF8275) : Colors.white,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _WishlistScreen extends StatefulWidget {
+  const _WishlistScreen({
+    required this.products,
+    required this.onBack,
+    required this.onFavoriteTap,
+    required this.onProductTap,
+  });
+
+  final List<UmkmProduct> products;
+  final VoidCallback onBack;
+  final ValueChanged<UmkmProduct> onFavoriteTap;
+  final ValueChanged<UmkmProduct> onProductTap;
+
+  @override
+  State<_WishlistScreen> createState() => _WishlistScreenState();
+}
+
+class _WishlistScreenState extends State<_WishlistScreen> {
+  static const _brown = _UmkmScreenState._brown;
+  final _searchController = TextEditingController();
+  String _query = '';
+
+  List<UmkmProduct> get _filteredProducts {
+    final query = _query.trim().toLowerCase();
+    if (query.isEmpty) return widget.products;
+    return widget.products.where((product) {
+      return product.name.toLowerCase().contains(query) ||
+          product.category.toLowerCase().contains(query) ||
+          product.description.toLowerCase().contains(query);
+    }).toList();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final products = _filteredProducts;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          IconButton(
+            tooltip: 'Kembali ke katalog UMKM',
+            alignment: Alignment.centerLeft,
+            padding: EdgeInsets.zero,
+            visualDensity: VisualDensity.compact,
+            onPressed: widget.onBack,
+            icon: const Icon(Icons.arrow_back_ios_new, size: 18, color: _brown),
+          ),
+          const Text(
+            'Wishlist',
+            style: TextStyle(
+              color: _brown,
+              fontSize: 24,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 3),
+          const Text(
+            'Produk favoritmu tersimpan di sini.',
+            style: TextStyle(color: Color(0xFF74685E), fontSize: 12),
+          ),
+          const SizedBox(height: 16),
+          TextField(
+            controller: _searchController,
+            onChanged: (value) => setState(() => _query = value),
+            style: const TextStyle(fontSize: 12, color: _brown),
+            decoration: InputDecoration(
+              hintText: 'Cari produk wishlist...',
+              hintStyle:
+                  const TextStyle(color: Color(0xFFAAA198), fontSize: 11),
+              prefixIcon: const Icon(Icons.search, size: 18),
+              suffixIcon: _query.isEmpty
+                  ? null
+                  : IconButton(
+                      tooltip: 'Hapus pencarian wishlist',
+                      onPressed: () {
+                        _searchController.clear();
+                        setState(() => _query = '');
+                      },
+                      icon: const Icon(Icons.close, size: 17),
+                    ),
+              filled: true,
+              fillColor: Colors.white,
+              isDense: true,
+              contentPadding: const EdgeInsets.symmetric(vertical: 12),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide.none,
+              ),
+            ),
+          ),
+          const SizedBox(height: 14),
+          Text(
+            '${widget.products.length} produk tersimpan',
+            style: const TextStyle(
+              color: _brown,
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Expanded(
+            child: products.isEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.favorite_border,
+                          size: 48,
+                          color: _brown.withValues(alpha: 0.35),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          widget.products.isEmpty
+                              ? 'Wishlist kamu masih kosong.'
+                              : 'Produk tidak ditemukan.',
+                          style: const TextStyle(color: Color(0xFF74685E)),
+                        ),
+                        if (widget.products.isEmpty) ...[
+                          const SizedBox(height: 4),
+                          const Text(
+                            'Simpan produk dengan mengetuk ikon hati.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Color(0xFF8C8178),
+                              fontSize: 11,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  )
+                : GridView.builder(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                      mainAxisExtent: 230,
+                    ),
+                    itemCount: products.length,
+                    itemBuilder: (context, index) {
+                      final product = products[index];
+                      return _WishlistProductCard(
+                        product: product,
+                        onTap: () => widget.onProductTap(product),
+                        onFavoriteTap: () => widget.onFavoriteTap(product),
+                      );
+                    },
+                  ),
+          ),
+          const SizedBox(height: 6),
+          const Center(
+            child: Text(
+              'Ketuk ikon hati untuk menghapus produk dari wishlist.',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Color(0xFF8C8178), fontSize: 10),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _WishlistProductCard extends StatelessWidget {
+  const _WishlistProductCard({
+    required this.product,
+    required this.onTap,
+    required this.onFavoriteTap,
+  });
+
+  final UmkmProduct product;
+  final VoidCallback onTap;
+  final VoidCallback onFavoriteTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      color: Colors.white,
+      elevation: 2,
+      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       child: InkWell(
         onTap: onTap,
-        customBorder: const CircleBorder(),
         child: Padding(
-          padding: const EdgeInsets.all(4),
-          child: Icon(
-            selected ? Icons.favorite : Icons.favorite_border,
-            size: 13,
-            color: selected ? const Color(0xFFEF8275) : Colors.white,
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 112,
+                child: _ProductImage(
+                  product: product,
+                  borderRadius: BorderRadius.circular(10),
+                  badge: _FavoriteButton(selected: true, onTap: onFavoriteTap),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                product.category,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: Color(0xFF8B6B4C),
+                  fontSize: 9,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 3),
+              Text(
+                product.name,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: _UmkmScreenState._brown,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  height: 1.2,
+                ),
+              ),
+              const Spacer(),
+              Text(
+                _formatPrice(product.price),
+                style: const TextStyle(
+                  color: _UmkmScreenState._mutedRed,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
           ),
         ),
       ),
